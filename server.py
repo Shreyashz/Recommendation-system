@@ -26,19 +26,15 @@ def scale_data():
     top_n = 5
     user_profile_scaled = scaler.transform([[user_profile['followers'], user_profile['minEng'], user_profile['est_cost']]])
     min_followers_scaled, min_engagement_scaled, max_cost_scaled = user_profile_scaled[0]
-    # print(user_profile_scaled) 
     similarities = {}
     for index, row in df.iterrows():
         influencer_vector = [row['Followers'], row['EngAvg'], row['Est_Pay']]
         user_profile_vector = [min_followers_scaled, min_engagement_scaled, max_cost_scaled]
         similarities[row['influencer']] = 1 - cosine(influencer_vector, user_profile_vector)
-    # print(similarities)
     sorted_influencers = sorted(similarities.items(), key=lambda x: x[1], reverse=True)[:top_n]
     response = {}
     for i in sorted_influencers:
         ind=np.where(df['influencer']==i[0])
-        # print(df.iloc[ind]['Followers'], df.iloc[ind]['EngAvg'], df.iloc[ind]['Est_Pay'])
-        print(df.iloc[ind]['Followers'], df.iloc[ind]['EngAvg'], df.iloc[ind]['Est_Pay'])
         response[i[0]]={'followers':float(df.iloc[ind]['Followers']), 'avg_Engagement':float(df.iloc[ind]['EngAvg']), 'Estimated_pay':float(df.iloc[ind]['Est_Pay'])}
     return jsonify({'suggested_Influencers': [response]}), 200
 
@@ -47,7 +43,7 @@ def scale_data():
 
 #Endpoint for catagorical matching
 @app.route('/reccat', methods=['POST'])
-def Catagorical():
+def Catagorical():  
     data = request.get_json()
     user_profile_text = data['country'] + ' ' + data['category']
     user_profile_vector = tfidf_vectorizer.transform([user_profile_text])
@@ -62,21 +58,5 @@ def Catagorical():
 
     return jsonify(recommended_influencers), 200
 
-
-
-
-
-@app.route('/recommend', methods=['POST'])
-def Recommend():
-    dictToSend = request.get_json()
-    response1 = requests.post('http://localhost:5000/scale', json=dictToSend)
-    response2 = requests.post('http://localhost:5000/reccat', json=dictToSend)
-    response1_json = json.loads(response1)
-    response2_json = json.loads(response2)
-    response1_keys = set(response1_json.keys())
-    response2_keys = set(response2_json.keys())
-    response = response1_keys.intersection(response2_keys)
-    return jsonify({'suggested_Influencers': [response]}), 200
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
