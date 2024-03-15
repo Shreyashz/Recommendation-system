@@ -17,7 +17,9 @@ df=pd.read_csv('Final_data.csv')
 
 
 
-
+@app.route('/test', methods=['GET'])
+def hello():
+    return "Hello there!"
 
 # Endpoint for scaling data
 @app.route('/scale', methods=['POST'])
