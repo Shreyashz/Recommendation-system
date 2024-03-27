@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 import numpy as np
 import requests
 from scipy.spatial.distance import cosine
@@ -6,6 +6,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import json
 import joblib
+
+Main = Blueprint('main', __name__)
 
 @app.route('/test', methods=['GET'])
 def hello():
