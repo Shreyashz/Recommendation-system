@@ -1,4 +1,3 @@
-from server import create_app
 from flask import Flask, request, jsonify
 import numpy as np
 import requests
@@ -15,7 +14,7 @@ tfidf_vectorizer = joblib.load('tfidf_vectorizer.pkl')
 tfidf_matrix = joblib.load('tfidf_matrix.pkl')
 df=pd.read_csv('Final_data.csv')
 
-@app.route('/test', methods=['GET'])
+@app.route('/', methods=['GET'])
 def hello():
     return "Hello there!"
 
