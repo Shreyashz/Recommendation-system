@@ -6,3 +6,4 @@ Requests==2.31.0
 scikit_learn
 scipy
 waitress
+gunicorn
